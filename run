@@ -1,0 +1,17 @@
+jagruti@jagruti:~/IdeaProjects/Assignment1$ cd src
+jagruti@jagruti:~/IdeaProjects/Assignment1/src$ javac AdditionService.java
+jagruti@jagruti:~/IdeaProjects/Assignment1/src$ javac AdditionServiceImpl.java
+jagruti@jagruti:~/IdeaProjects/Assignment1/src$ javac Server.java
+jagruti@jagruti:~/IdeaProjects/Assignment1/src$ javac Client.java
+
+jagruti@jagruti:~/IdeaProjects/Assignment1$ cd src
+jagruti@jagruti:~/IdeaProjects/Assignment1/src$ java Server
+Server is ready...
+
+jagruti@jagruti:~/IdeaProjects/Assignment1$ cd src
+jagruti@jagruti:~/IdeaProjects/Assignment1/src$ java Client
+Enter first number :
+20
+Enter second number :
+10
+Result: 30
