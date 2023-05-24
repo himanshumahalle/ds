@@ -1,27 +1,38 @@
-import java.rmi.registry.Registry;
-import java.rmi.registry.LocateRegistry;
-import java.util.Scanner;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.time.LocalDateTime;
 
-public class Client {
+class Client {
+    private static final String SERVER_IP = "127.0.0.1";
+    private static final int PORT = 12345;
+
     public static void main(String[] args) {
-        try {
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
-            AdditionService additionService = (AdditionService) registry.lookup("AdditionService");
+        try (Socket socket = new Socket(SERVER_IP, PORT)) {
+            ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
 
-            Scanner sc=new Scanner(System.in);
+            // Get client's local time
+            LocalDateTime clientTime = LocalDateTime.now();
+            System.out.println("Client time: " + clientTime);
 
-            System.out.println("Enter first number :");
-            int num1=sc.nextInt();
+            // Send client's local time to server
+            outputStream.writeObject(clientTime);
+            outputStream.flush();
 
-            System.out.println("Enter second number :");
-            int num2=sc.nextInt();
+            // Receive time difference from server
+            long timeDifference = inputStream.readLong();
+            System.out.println("Received time difference from server: " + timeDifference);
 
-            int result = additionService.addNumbers(num1, num2);
-            System.out.println("Result: " + result);
-        } catch (Exception e) {
-            System.err.println("Client exception: " + e.toString());
+            // Calculate and set synchronized time
+            LocalDateTime synchronizedTime = clientTime.plusNanos(timeDifference);
+            System.out.println("Synchronized time: " + synchronizedTime);
+
+            outputStream.close();
+            inputStream.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 }
-
